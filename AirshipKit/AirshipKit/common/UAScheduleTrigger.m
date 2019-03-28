@@ -2,7 +2,6 @@
 
 #import "UAScheduleTrigger+Internal.h"
 #import "UAJSONPredicate.h"
-#import "UARegionEvent+Internal.h"
 
 // JSON Keys
 NSString *const UAScheduleTriggerTypeKey = @"type";
@@ -54,26 +53,6 @@ NSString * const UAScheduleTriggerErrorDomain = @"com.urbanairship.schedule_trig
 
 + (instancetype)activeSessionTriggerWithCount:(NSUInteger)count {
     return [UAScheduleTrigger triggerWithType:UAScheduleTriggerActiveSession goal:@(count) predicate:nil];
-}
-
-+ (instancetype)regionEnterTriggerForRegionID:(NSString *)regionID count:(NSUInteger)count {
-    UAJSONValueMatcher *valueMatcher = [UAJSONValueMatcher matcherWhereStringEquals:regionID];
-    UAJSONMatcher *jsonMatcher = [UAJSONMatcher matcherWithValueMatcher:valueMatcher scope:@[kUARegionIDKey]];
-    UAJSONPredicate *predicate = [UAJSONPredicate predicateWithJSONMatcher:jsonMatcher];
-
-    return [UAScheduleTrigger triggerWithType:UAScheduleTriggerRegionEnter
-                                         goal:@(count)
-                                    predicate:predicate];
-}
-
-+ (instancetype)regionExitTriggerForRegionID:(NSString *)regionID count:(NSUInteger)count {
-    UAJSONValueMatcher *valueMatcher = [UAJSONValueMatcher matcherWhereStringEquals:regionID];
-    UAJSONMatcher *jsonMatcher = [UAJSONMatcher matcherWithValueMatcher:valueMatcher scope:@[kUARegionIDKey]];
-    UAJSONPredicate *predicate = [UAJSONPredicate predicateWithJSONMatcher:jsonMatcher];
-
-    return [UAScheduleTrigger triggerWithType:UAScheduleTriggerRegionExit
-                                         goal:@(count)
-                                    predicate:predicate];
 }
 
 + (instancetype)screenTriggerForScreenName:(NSString *)screenName count:(NSUInteger)count {

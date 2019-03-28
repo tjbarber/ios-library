@@ -40,8 +40,6 @@
 #import "UAJSONPredicate.h"
 #import "UAJSONValueMatcher.h"
 #import "UAJavaScriptDelegate.h"
-#import "UALocation.h"
-#import "UALocationEvent.h"
 #import "UAMediaEventTemplate.h"
 #import "UAModifyTagsAction.h"
 #import "UANamedUser.h"

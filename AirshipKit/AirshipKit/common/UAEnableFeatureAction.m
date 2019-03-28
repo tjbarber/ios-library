@@ -2,13 +2,10 @@
 
 #import "UAEnableFeatureAction.h"
 #import "UAirship.h"
-#import "UALocation.h"
 #import "UAPush+Internal.h"
 
 
 NSString *const UAEnableUserNotificationsActionValue = @"user_notifications";
-NSString *const UAEnableLocationActionValue = @"location";
-NSString *const UAEnableBackgroundLocationActionValue = @"background_location";
 
 @implementation UAEnableFeatureAction
 
@@ -24,7 +21,7 @@ NSString *const UAEnableBackgroundLocationActionValue = @"background_location";
     }
 
     NSString *value = arguments.value;
-    if ([value isEqualToString:UAEnableUserNotificationsActionValue] || [value isEqualToString:UAEnableLocationActionValue] || [value isEqualToString:UAEnableBackgroundLocationActionValue]) {
+    if ([value isEqualToString:UAEnableUserNotificationsActionValue]) {
         return YES;
     }
 
@@ -35,10 +32,6 @@ NSString *const UAEnableBackgroundLocationActionValue = @"background_location";
            completionHandler:(UAActionCompletionHandler)completionHandler {
     if ([arguments.value isEqualToString:UAEnableUserNotificationsActionValue]) {
         [self enableUserNotifications:completionHandler];
-    } else if ([arguments.value isEqualToString:UAEnableBackgroundLocationActionValue]) {
-        [self enableBackgroundLocation:completionHandler];
-    } else if ([arguments.value isEqualToString:UAEnableLocationActionValue]) {
-        [self enableLocation:completionHandler];
     } else {
         completionHandler([UAActionResult emptyResult]);
     }
@@ -48,10 +41,6 @@ NSString *const UAEnableBackgroundLocationActionValue = @"background_location";
     [[UAirship push].pushRegistration getAuthorizedSettingsWithCompletionHandler:^(UAAuthorizedNotificationSettings authorizedSettings, UAAuthorizationStatus status) {
         callback(authorizedSettings != UAAuthorizedNotificationSettingsNone);
     }];
-}
-
-- (BOOL)isLocationDeniedOrRestricted {
-    return UAirship.location.isLocationDeniedOrRestricted;
 }
 
 - (void)navigateToSystemSettingsWithCompletionHandler:(UAActionCompletionHandler)completionHandler {
@@ -70,26 +59,6 @@ NSString *const UAEnableBackgroundLocationActionValue = @"background_location";
                 [self navigateToSystemSettingsWithCompletionHandler:completionHandler];
             }
         }];
-    } else {
-        completionHandler([UAActionResult emptyResult]);
-    }
-}
-
-- (void)enableBackgroundLocation:(UAActionCompletionHandler)completionHandler {
-    UAirship.location.locationUpdatesEnabled = YES;
-    UAirship.location.backgroundLocationUpdatesAllowed = YES;
-
-    if ([self isLocationDeniedOrRestricted]) {
-        [self navigateToSystemSettingsWithCompletionHandler:completionHandler];
-    } else {
-        completionHandler([UAActionResult emptyResult]);
-    }
-}
-
-- (void)enableLocation:(UAActionCompletionHandler)completionHandler {
-    UAirship.location.locationUpdatesEnabled = YES;
-    if ([self isLocationDeniedOrRestricted]) {
-        [self navigateToSystemSettingsWithCompletionHandler:completionHandler];
     } else {
         completionHandler([UAActionResult emptyResult]);
     }

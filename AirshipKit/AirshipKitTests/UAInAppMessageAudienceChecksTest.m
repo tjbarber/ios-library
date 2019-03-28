@@ -4,7 +4,6 @@
 #import "UAInAppMessageAudienceChecks+Internal.h"
 #import "UAInAppMessageAudience+Internal.h"
 #import "UAVersionMatcher+Internal.h"
-#import "UALocation+Internal.h"
 #import "UAirship+Internal.h"
 #import "UAPush+Internal.h"
 #import "UAInAppMessageTagSelector.h"
@@ -14,7 +13,6 @@
 @interface UAInAppMessageAudienceChecksTest : UABaseTest
 
 @property (nonatomic, strong) id mockAirship;
-@property (nonatomic, strong) id mockLocation;
 @property (nonatomic, strong) id mockPush;
 
 @end
@@ -28,9 +26,6 @@
     self.mockPush = [self mockForClass:[UAPush class]];
     [[[self.mockAirship stub] andReturn:self.mockPush] sharedPush];
     [UAirship setSharedAirship:self.mockAirship];
-
-    self.mockLocation = [self strictMockForClass:[UALocation class]];
-    [[[self.mockAirship stub] andReturn:self.mockLocation] sharedLocation];
 }
 
 - (void)testEmptyAudience {
@@ -38,42 +33,6 @@
     }];
     
     XCTAssertTrue([UAInAppMessageAudienceChecks checkDisplayAudienceConditions:audience]);
-}
-
-- (void)testLocationOptIn {
-    // setup
-    UAInAppMessageAudience *requiresOptedIn = [UAInAppMessageAudience audienceWithBuilderBlock:^(UAInAppMessageAudienceBuilder * _Nonnull builder) {
-        builder.locationOptIn = @YES;
-    }];
-    
-    UAInAppMessageAudience *requiresOptedOut = [UAInAppMessageAudience audienceWithBuilderBlock:^(UAInAppMessageAudienceBuilder * _Nonnull builder) {
-        builder.locationOptIn = @NO;
-    }];
-    
-    [[[self.mockLocation stub] andReturnValue:@YES] isLocationOptedIn];
-    [[[self.mockLocation stub] andReturnValue:@YES] isLocationUpdatesEnabled];
-
-    // test
-    XCTAssertTrue([UAInAppMessageAudienceChecks checkDisplayAudienceConditions:requiresOptedIn]);
-    XCTAssertFalse([UAInAppMessageAudienceChecks checkDisplayAudienceConditions:requiresOptedOut]);
-}
-
-- (void)testLocationOptOut {
-    // setup
-    UAInAppMessageAudience *requiresOptedIn = [UAInAppMessageAudience audienceWithBuilderBlock:^(UAInAppMessageAudienceBuilder * _Nonnull builder) {
-        builder.locationOptIn = @YES;
-    }];
-    
-    UAInAppMessageAudience *requiresOptedOut = [UAInAppMessageAudience audienceWithBuilderBlock:^(UAInAppMessageAudienceBuilder * _Nonnull builder) {
-        builder.locationOptIn = @NO;
-    }];
-    
-    [[[self.mockLocation stub] andReturnValue:@NO] isLocationOptedIn];
-    [[[self.mockLocation stub] andReturnValue:@YES] isLocationUpdatesEnabled];
-
-    // test
-    XCTAssertFalse([UAInAppMessageAudienceChecks checkDisplayAudienceConditions:requiresOptedIn]);
-    XCTAssertTrue([UAInAppMessageAudienceChecks checkDisplayAudienceConditions:requiresOptedOut]);
 }
 
 - (void)testNotificationOptIn {

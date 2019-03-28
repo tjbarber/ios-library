@@ -8,7 +8,6 @@
 #import "UAEvent.h"
 #import "UAAssociateIdentifiersEvent+Internal.h"
 #import "UAScreenTrackingEvent+Internal.h"
-#import "UARegionEvent.h"
 #import "UACustomEvent.h"
 #import "UAEventManager+Internal.h"
 #import "UATestDate.h"
@@ -365,20 +364,6 @@
 
     id expectedEvent = @{ @"screen": @"screen"};
     XCTAssertEqualObjects(expectedEvent, event);
-}
-
-// Tests forwarding region events to the analytics delegate.
-- (void)testForwardRegionEvents {
-    XCTestExpectation *notificationFired = [self expectationWithDescription:@"Notification event fired"];
-
-    [self.notificationCenter addObserverForName:UARegionEventAdded object:nil queue:nil usingBlock:^(NSNotification * _Nonnull note) {
-        [notificationFired fulfill];
-    }];
-
-    UARegionEvent *regionEnter = [UARegionEvent regionEventWithRegionID:@"region" source:@"test" boundaryEvent:UABoundaryEventEnter];
-    [self.analytics addEvent:regionEnter];
-
-    [self waitForTestExpectations];
 }
 
 // Tests forwarding custom events to the analytics delegate.

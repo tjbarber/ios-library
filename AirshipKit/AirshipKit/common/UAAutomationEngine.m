@@ -10,7 +10,6 @@
 #import "UAScheduleTrigger+Internal.h"
 #import "UAScheduleInfo+Internal.h"
 #import "UAEvent.h"
-#import "UARegionEvent+Internal.h"
 #import "UACustomEvent+Internal.h"
 #import "NSJSONSerialization+UAAdditions.h"
 #import "UAJSONPredicate.h"
@@ -146,11 +145,6 @@
     [self.notificationCenter addObserver:self
                                 selector:@selector(screenTracked:)
                                     name:UAScreenTracked
-                                  object:nil];
-
-    [self.notificationCenter addObserver:self
-                                selector:@selector(regionEventAdded:)
-                                    name:UARegionEventAdded
                                   object:nil];
 
     [self cleanSchedules];
@@ -469,24 +463,6 @@
                             argument:event.payload
                      incrementAmount:[event.eventValue doubleValue]];
     }
-}
-
--(void)regionEventAdded:(NSNotification *)notification {
-    UARegionEvent *event = notification.userInfo[UAEventKey];
-
-    UAScheduleTriggerType triggerType;
-
-    if (event.boundaryEvent == UABoundaryEventEnter) {
-        triggerType = UAScheduleTriggerRegionEnter;
-        self.currentRegion = event.regionID;
-    } else {
-        triggerType = UAScheduleTriggerRegionExit;
-        self.currentRegion = nil;
-    }
-
-    [self updateTriggersWithType:triggerType argument:event.payload incrementAmount:1.0];
-
-    [self scheduleConditionsChanged];
 }
 
 -(void)screenTracked:(NSNotification *)notification {

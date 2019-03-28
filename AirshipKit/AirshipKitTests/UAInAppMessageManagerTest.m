@@ -130,7 +130,6 @@
                 builder.audience = tagGroupAudience;
             } else {
                 builder.audience = [UAInAppMessageAudience audienceWithBuilderBlock:^(UAInAppMessageAudienceBuilder * _Nonnull builder) {
-                    builder.locationOptIn = @NO;
                     builder.missBehavior = missBehavior;
                 }];
             }

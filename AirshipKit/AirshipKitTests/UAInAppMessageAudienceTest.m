@@ -18,7 +18,6 @@
     UAInAppMessageAudience *originalAudience = [UAInAppMessageAudience audienceWithBuilderBlock:^(UAInAppMessageAudienceBuilder *builder) {
         builder.isNewUser = @YES;
         builder.notificationsOptIn = @YES;
-        builder.locationOptIn = @NO;
         builder.languageTags = @[@"en-us"];
         builder.tagSelector = [UAInAppMessageTagSelector selectorWithJSON:@{
                                 @"not" : @{
@@ -47,7 +46,6 @@
     UAInAppMessageAudience *originalAudience = [UAInAppMessageAudience audienceWithBuilderBlock:^(UAInAppMessageAudienceBuilder *builder) {
         builder.isNewUser = @YES;
         builder.notificationsOptIn = @YES;
-        builder.locationOptIn = @NO;
         builder.languageTags = @[@"en-us"];
         builder.tagSelector = [UAInAppMessageTagSelector selectorWithJSON:@{
                                                                             @"not" : @{
@@ -115,7 +113,6 @@
     NSError *error;
     NSDictionary *json = @{ @"new_user": @(true),
                             @"notification_opt_in": @(true),
-                            @"location_opt_in": @(true),
                             @"locale": @[@"en-us"],
                             @"tags": @{
                                     @"and": @[@{

@@ -11,7 +11,6 @@
 #import "UAAppBackgroundEvent+Internal.h"
 #import "UAAppForegroundEvent+Internal.h"
 #import "UAScreenTrackingEvent+Internal.h"
-#import "UARegionEvent+Internal.h"
 #import "UAAssociateIdentifiersEvent+Internal.h"
 #import "UAAssociatedIdentifiers.h"
 #import "UACustomEvent.h"
@@ -213,12 +212,6 @@ NSString *const UAEventKey = @"event";
 
         if ([event isKindOfClass:[UACustomEvent class]]) {
             [self.notificationCenter postNotificationName:UACustomEventAdded
-                                                   object:self
-                                                 userInfo:@{UAEventKey: event}];
-        }
-
-        if ([event isKindOfClass:[UARegionEvent class]]) {
-            [self.notificationCenter postNotificationName:UARegionEventAdded
                                                    object:self
                                                  userInfo:@{UAEventKey: event}];
         }

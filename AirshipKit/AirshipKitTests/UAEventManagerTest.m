@@ -9,7 +9,6 @@
 #import "UAConfig.h"
 #import "UACustomEvent.h"
 #import "NSOperationQueue+UAAdditions.h"
-#import "UARegionEvent.h"
 #import "UAAsyncOperation+Internal.h"
 #import "UAirship+Internal.h"
 #import "UAPush.h"
@@ -216,39 +215,6 @@
 }
 
 /**
- * Test adding a high priority event defaults to a 1 second delay.
- */
-- (void)testAddHighPriorityEvent {
-    UARegionEvent *event = [[UARegionEvent alloc] init];
-
-    XCTestExpectation *expectation = [self expectationWithDescription:@"Wait for async."];
-
-    __block NSTimeInterval delay = -1;
-    [[[[self.mockQueue expect] andDo:^(NSInvocation *invocation) {
-        [invocation getArgument:&delay atIndex:3];
-
-        [expectation fulfill];
-
-        BOOL result = YES;
-        [invocation setReturnValue:&result];
-
-    }] ignoringNonObjectArgs] addBackgroundOperation:OCMOCK_ANY delay:0];
-
-
-    [[self.mockStore expect] saveEvent:event sessionID:@"story"];
-
-    [self.eventManager addEvent:event sessionID:@"story"];
-
-    [self waitForTestExpectations];
-
-    [self.mockStore verify];
-    [self.mockQueue verify];
-
-    // Verify the delay is around 1 seconds
-    XCTAssertEqualWithAccuracy(delay, 1, .1);
-}
-
-/**
  * Test entering background schedules an upload with a 5 second delay.
  */
 - (void)testBackground {
@@ -315,22 +281,6 @@
 
     // Verify the delay is around 15 seconds
     XCTAssertEqualWithAccuracy(delay, 15, 5);
-}
-
-/**
- * Test scheduling an upload with an earlier time will cancel the current operations.
- */
-- (void)testRescheduleUpload {
-    // Add a normal priority event (delay 15ish seconds)
-    [self testAddEvent];
-
-    // Make sure it cancels the previous attempt
-    [[self.mockQueue expect] cancelAllOperations];
-
-    // Add a high priority event (delay 5ish seconds)
-    [self testAddHighPriorityEvent];
-
-    [self.mockQueue verify];
 }
 
 /**

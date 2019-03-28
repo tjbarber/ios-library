@@ -3,7 +3,6 @@
 #import "UAInAppMessageAudienceChecks+Internal.h"
 #import "UAInAppMessageAudience+Internal.h"
 #import "UAirship+Internal.h"
-#import "UALocation+Internal.h"
 #import "UAApplicationMetrics+Internal.h"
 #import "UAPush+Internal.h"
 #import "UAInAppMessageTagSelector+Internal.h"
@@ -48,11 +47,6 @@
 + (BOOL)checkDisplayAudienceConditions:(UAInAppMessageAudience *)audience tagGroups:(UATagGroups *)tagGroups {
     if (!audience) {
         return YES;
-    }
-    
-    // Location opt-in
-    if (audience.locationOptIn && ([audience.locationOptIn boolValue] != UAirship.location.isLocationOptedIn)) {
-        return NO;
     }
     
     // Notification opt-in

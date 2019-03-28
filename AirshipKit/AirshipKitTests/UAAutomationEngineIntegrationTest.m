@@ -3,7 +3,6 @@
 #import "UABaseTest.h"
 #import "UAAutomationEngine+Internal.h"
 #import "UAirship+Internal.h"
-#import "UARegionEvent.h"
 #import "UACustomEvent.h"
 #import "UAAutomationStore+Internal.h"
 #import "UAJSONPredicate.h"
@@ -698,39 +697,6 @@
     }];
 }
 
-- (void)testRegionEnter {
-    UARegionEvent *regionAEnter = [UARegionEvent regionEventWithRegionID:@"regionA" source:@"test" boundaryEvent:UABoundaryEventEnter];
-    UARegionEvent *regionBEnter = [UARegionEvent regionEventWithRegionID:@"regionB" source:@"test" boundaryEvent:UABoundaryEventEnter];
-
-    UAScheduleTrigger *trigger = [UAScheduleTrigger regionEnterTriggerForRegionID:@"regionA" count:2];
-
-    [self verifyTrigger:trigger triggerFireBlock:^{
-        // Make sure regionB does not trigger the action
-        [self emitEvent:regionBEnter];
-
-        // Trigger the action with 2 regionA enter events
-        [self emitEvent:regionAEnter];
-        [self emitEvent:regionAEnter];
-    }];
-}
-
-
-- (void)testRegionExit {
-    UARegionEvent *regionAExit = [UARegionEvent regionEventWithRegionID:@"regionA" source:@"test" boundaryEvent:UABoundaryEventExit];
-    UARegionEvent *regionBExit = [UARegionEvent regionEventWithRegionID:@"regionB" source:@"test" boundaryEvent:UABoundaryEventExit];
-
-    UAScheduleTrigger *trigger = [UAScheduleTrigger regionExitTriggerForRegionID:@"regionA" count:2];
-
-    [self verifyTrigger:trigger triggerFireBlock:^{
-        // Make sure regionB does not trigger the action
-        [self emitEvent:regionBExit];
-
-        // Trigger the action with 2 regionA exit events
-        [self emitEvent:regionAExit];
-        [self emitEvent:regionAExit];
-    }];
-}
-
 - (void)testScreen {
     UAScheduleTrigger *trigger = [UAScheduleTrigger screenTriggerForScreenName:@"screenA" count:2];
 
@@ -794,16 +760,6 @@
     }];
 }
 
-- (void)testRegionDelay {
-    UAScheduleDelay *delay = [UAScheduleDelay delayWithBuilderBlock:^(UAScheduleDelayBuilder * builder) {
-        builder.regionID = @"region test";
-    }];
-
-    [self verifyDelay:delay fulfillmentBlock:^{
-        UARegionEvent *regionEnter = [UARegionEvent regionEventWithRegionID:@"region test" source:@"test" boundaryEvent:UABoundaryEventEnter];
-        [self emitEvent:regionEnter];
-    }];
-}
 
 - (void)testForegroundDelay {
     UAScheduleDelay *delay = [UAScheduleDelay delayWithBuilderBlock:^(UAScheduleDelayBuilder * builder) {
@@ -1391,12 +1347,6 @@
 - (void)emitEvent:(UAEvent *)event {
     if ([event isKindOfClass:[UACustomEvent class]]) {
         [self.notificationCenter postNotificationName:UACustomEventAdded
-                                               object:self
-                                             userInfo:@{UAEventKey: event}];
-    }
-
-    if ([event isKindOfClass:[UARegionEvent class]]) {
-        [self.notificationCenter postNotificationName:UARegionEventAdded
                                                object:self
                                              userInfo:@{UAEventKey: event}];
     }

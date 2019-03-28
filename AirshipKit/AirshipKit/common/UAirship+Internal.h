@@ -60,11 +60,6 @@ NS_ASSUME_NONNULL_BEGIN
 #endif
 
 /**
- * The location manager.
- */
-@property (nonatomic, strong) UALocation *sharedLocation;
-
-/**
  * The named user.
  */
 @property (nonatomic, strong) UANamedUser *sharedNamedUser;

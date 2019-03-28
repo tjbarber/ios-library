@@ -10,7 +10,6 @@
 #import "UAConfig.h"
 #import "UAApplicationMetrics+Internal.h"
 #import "UAActionRegistry.h"
-#import "UALocation+Internal.h"
 #import "UAAutoIntegration+Internal.h"
 #import "NSJSONSerialization+UAAdditions.h"
 #import "UAURLProtocol.h"
@@ -113,7 +112,6 @@ BOOL uaLoudImpErrorLoggingEnabled = YES;
 
         self.sharedAnalytics = [UAAnalytics analyticsWithConfig:config dataStore:dataStore];
         self.whitelist = [UAWhitelist whitelistWithConfig:config];
-        self.sharedLocation = [UALocation locationWithAnalytics:self.sharedAnalytics dataStore:dataStore];
         self.sharedAutomation = [UAAutomation automationWithConfig:config dataStore:dataStore];
         self.sharedRemoteDataManager = [UARemoteDataManager remoteDataManagerWithConfig:config dataStore:dataStore];
 
@@ -390,10 +388,6 @@ BOOL uaLoudImpErrorLoggingEnabled = YES;
 }
 
 #endif
-
-+ (UALocation *)location {
-    return sharedAirship_.sharedLocation;
-}
 
 + (UANamedUser *)namedUser {
     return sharedAirship_.sharedNamedUser;

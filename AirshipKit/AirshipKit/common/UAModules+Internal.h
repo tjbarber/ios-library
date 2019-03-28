@@ -36,11 +36,6 @@ extern NSString * const UAModulesAutomation;
 extern NSString * const UAModulesNamedUser;
 
 /**
- * The location module.
- */
-extern NSString * const UAModulesLocation;
-
-/**
  * An interface mapping modules to components, and providing hooks for common operations.
  */
 @interface UAModules : NSObject

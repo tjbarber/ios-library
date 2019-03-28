@@ -3,7 +3,6 @@
 
 #import "UAFetchDeviceInfoAction.h"
 #import "UAirship.h"
-#import "UALocation.h"
 #import "UAPush.h"
 #import "UANamedUser.h"
 
@@ -13,7 +12,6 @@ NSString *const UAChannelIDKey = @"channel_id";
 NSString *const UANamedUserKey = @"named_user";
 NSString *const UATagsKey = @"tags";
 NSString *const UAPushOptInKey = @"push_opt_in";
-NSString *const UALocationEnabledKey = @"location_enabled";
 
 - (void)performWithArguments:(UAActionArguments *)arguments
            completionHandler:(UAActionCompletionHandler)completionHandler {
@@ -29,9 +27,6 @@ NSString *const UALocationEnabledKey = @"location_enabled";
 
     BOOL optedIn = [UAirship push].authorizedNotificationSettings != 0;
     [dict setValue:@(optedIn) forKey:UAPushOptInKey];
-    
-    BOOL locationEnabled = UAirship.location.locationUpdatesEnabled;
-    [dict setValue:@(locationEnabled) forKey:UALocationEnabledKey];
     
     completionHandler([UAActionResult resultWithValue:dict]);
 }

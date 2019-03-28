@@ -8,7 +8,6 @@
 
 NSString * const UAInAppMessageAudienceNewUserKey = @"new_user";
 NSString * const UAInAppMessageAudienceNotificationOptInKey = @"notification_opt_in";
-NSString * const UAInAppMessageAudienceLocationOptInKey = @"location_opt_in";
 NSString * const UAInAppMessageAudienceLanguageTagsKey = @"locale";
 NSString * const UAInAppMessageAudienceTagSelectorKey = @"tags";
 NSString * const UAInAppMessageAudienceAppVersionKey = @"app_version";
@@ -23,7 +22,6 @@ NSString * const UAInAppMessageAudienceErrorDomain = @"com.urbanairship.in_app_m
 
 @interface UAInAppMessageAudience()
 @property(nonatomic, strong, nullable) NSNumber *notificationsOptIn;
-@property(nonatomic, strong, nullable) NSNumber *locationOptIn;
 @property(nonatomic, strong, nullable) NSArray<NSString *> *languageIDs;
 @property(nonatomic, strong, nullable) UAInAppMessageTagSelector *tagSelector;
 @property(nonatomic, strong, nullable) UAJSONPredicate *versionPredicate;
@@ -84,17 +82,6 @@ NSString * const UAInAppMessageAudienceErrorDomain = @"com.urbanairship.in_app_m
             return nil;
         }
         builder.notificationsOptIn = notificationsOptIn;
-    }
-
-    id locationOptIn = json[UAInAppMessageAudienceLocationOptInKey];
-    if (locationOptIn) {
-        if (![locationOptIn isKindOfClass:[NSNumber class]]) {
-            if (error) {
-                *error = [self invalidJSONErrorWithMsg:[NSString stringWithFormat:@"Value for the \"%@\" key must be a boolean. Invalid value: %@", UAInAppMessageAudienceLocationOptInKey, locationOptIn]];
-            }
-            return nil;
-        }
-        builder.locationOptIn = locationOptIn;
     }
 
     id languageTags = json[UAInAppMessageAudienceLanguageTagsKey];
@@ -211,7 +198,6 @@ NSString * const UAInAppMessageAudienceErrorDomain = @"com.urbanairship.in_app_m
         _isNewUser = builder.isNewUser;
         _testDevices = builder.testDevices;
         self.notificationsOptIn = builder.notificationsOptIn;
-        self.locationOptIn = builder.locationOptIn;
         self.languageIDs = builder.languageTags;
         self.tagSelector = builder.tagSelector;
         self.versionPredicate = builder.versionPredicate;
@@ -236,7 +222,6 @@ NSString * const UAInAppMessageAudienceErrorDomain = @"com.urbanairship.in_app_m
     NSMutableDictionary *json = [NSMutableDictionary dictionary];
     [json setValue:self.isNewUser forKey:UAInAppMessageAudienceNewUserKey];
     [json setValue:self.notificationsOptIn forKey:UAInAppMessageAudienceNotificationOptInKey];
-    [json setValue:self.locationOptIn forKey:UAInAppMessageAudienceLocationOptInKey];
     [json setValue:self.languageIDs forKey:UAInAppMessageAudienceLanguageTagsKey];
     [json setValue:[self.tagSelector toJSON] forKey:UAInAppMessageAudienceTagSelectorKey];
     [json setValue:self.versionPredicate.payload forKey:UAInAppMessageAudienceAppVersionKey];
@@ -276,9 +261,6 @@ NSString * const UAInAppMessageAudienceErrorDomain = @"com.urbanairship.in_app_m
     if ((self.notificationsOptIn != audience.notificationsOptIn) && ![self.notificationsOptIn isEqual:audience.notificationsOptIn]) {
         return NO;
     }
-    if ((self.locationOptIn != audience.locationOptIn) && ![self.locationOptIn isEqual:audience.locationOptIn]) {
-        return NO;
-    }
     if ((self.languageIDs != audience.languageIDs) && ![self.languageIDs isEqual:audience.languageIDs]) {
         return NO;
     }
@@ -301,7 +283,6 @@ NSString * const UAInAppMessageAudienceErrorDomain = @"com.urbanairship.in_app_m
     NSUInteger result = 1;
     result = 31 * result + [self.isNewUser hash];
     result = 31 * result + [self.notificationsOptIn hash];
-    result = 31 * result + [self.locationOptIn hash];
     result = 31 * result + [self.languageIDs hash];
     result = 31 * result + [self.tagSelector hash];
     result = 31 * result + [self.versionPredicate.payload hash];

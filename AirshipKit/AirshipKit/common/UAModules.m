@@ -10,7 +10,6 @@ NSString * const UAModulesMessageCenter = @"message_center";
 NSString * const UAModulesInAppMessaging = @"in_app_v2";
 NSString * const UAModulesAutomation = @"automation";
 NSString * const UAModulesNamedUser = @"named_user";
-NSString * const UAModulesLocation = @"location";
 
 @interface UAModules ()
 @property (nonatomic, strong) NSDictionary<const NSString *, NSString *> *moduleMap;
@@ -27,7 +26,6 @@ NSString * const UAModulesLocation = @"location";
                        UAModulesAnalytics:NSStringFromSelector(@selector(sharedAnalytics)),
                        UAModulesAutomation:NSStringFromSelector(@selector(sharedAutomation)),
                        UAModulesNamedUser:NSStringFromSelector(@selector(sharedNamedUser)),
-                       UAModulesLocation:NSStringFromSelector(@selector(sharedLocation)),
 #if !TARGET_OS_TV
                        UAModulesMessageCenter:NSStringFromSelector(@selector(sharedInbox)),
                        UAModulesInAppMessaging:NSStringFromSelector(@selector(sharedInAppMessageManager)),

@@ -7,7 +7,6 @@
 #import "UAirship.h"
 #import "UAPush+Internal.h"
 #import "UAUser.h"
-#import "UALocation.h"
 #import "NSJSONSerialization+UAAdditions.h"
 #import "UAJSONSerialization+Internal.h"
 
@@ -86,11 +85,6 @@
         [builder setValue:[[UAirship push] userPushNotificationsAllowed] ? @"true" : @"false" forHeader:@"X-UA-Channel-Opted-In"];
         [builder setValue:[UAirship push].userPromptedForNotifications ? @"true" : @"false" forHeader:@"X-UA-Notification-Prompted"];
         [builder setValue:[[UAirship push] backgroundPushNotificationsAllowed] ? @"true" : @"false" forHeader:@"X-UA-Channel-Background-Enabled"];
-
-        // Location settings
-        // Location settings
-        [builder setValue:UAirship.location.locationPermissionDescription forHeader:@"X-UA-Location-Permission"];
-        [builder setValue:UAirship.location.locationUpdatesEnabled ? @"true" : @"false" forHeader:@"X-UA-Location-Service-Enabled"];
     }];
     
     return request;

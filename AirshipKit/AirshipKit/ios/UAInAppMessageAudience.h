@@ -41,13 +41,6 @@ typedef NS_ENUM(NSInteger, UAInAppMessageAudienceMissBehaviorType) {
 @property(nonatomic, strong, nullable) NSNumber *notificationsOptIn;
 
 /**
- * The location opt in flag.
- *
- * Optional.
- */
-@property(nonatomic, strong, nullable) NSNumber *locationOptIn;
-
-/**
  * The language tags.
  *
  * Optional.
@@ -94,11 +87,6 @@ typedef NS_ENUM(NSInteger, UAInAppMessageAudienceMissBehaviorType) {
  * The notifications opt in flag.
  */
 @property(nonatomic, readonly, nullable) NSNumber *notificationsOptIn;
-
-/**
- * The location opt in flag.
- */
-@property(nonatomic, readonly, nullable) NSNumber *locationOptIn;
 
 /**
  * The language tags.

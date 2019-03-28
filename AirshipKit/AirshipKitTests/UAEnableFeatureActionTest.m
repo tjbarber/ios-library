@@ -6,7 +6,6 @@
 #import "UAEnableFeatureAction.h"
 #import "UAirship+Internal.h"
 #import "UAPush+Internal.h"
-#import "UALocation.h"
 #import "UAAPNSRegistration+Internal.h"
 
 @interface UAEnableFeatureActionTest : UABaseTest
@@ -15,7 +14,6 @@
 @property (nonatomic, strong) UAActionArguments *arguments;
 
 @property(nonatomic, strong) id mockPush;
-@property(nonatomic, strong) id mockLocation;
 @property(nonatomic, strong) id mockAirship;
 @property(nonatomic, strong) id mockPushRegistration;
 @property(nonatomic, strong) id mockApplication;
@@ -30,21 +28,18 @@
     self.action = [[UAEnableFeatureAction alloc] init];
 
     self.mockPush = [self strictMockForClass:[UAPush class]];
-    self.mockLocation = [self strictMockForClass:[UALocation class]];
     self.mockAirship = [self strictMockForClass:[UAirship class]];
     self.mockPushRegistration = [self mockForProtocol:@protocol(UAAPNSRegistrationProtocol)];
     self.mockApplication = [self mockForClass:[UIApplication class]];
 
     [UAirship setSharedAirship:self.mockAirship];
     [[[self.mockAirship stub] andReturn:self.mockPush] sharedPush];
-    [[[self.mockAirship stub] andReturn:self.mockLocation] sharedLocation];
     [[[self.mockPush stub] andReturn:self.mockPushRegistration] pushRegistration];
     [[[self.mockApplication stub] andReturn:self.mockApplication] sharedApplication];
 }
 
 - (void)tearDown {
     [self.mockPush stopMocking];
-    [self.mockLocation stopMocking];
     [self.mockAirship stopMocking];
     [self.mockPushRegistration stopMocking];
     [self.mockApplication stopMocking];
@@ -70,7 +65,7 @@
         UASituationBackgroundPush,
     };
 
-    NSArray *validValues = @[UAEnableLocationActionValue, UAEnableUserNotificationsActionValue, UAEnableBackgroundLocationActionValue];
+    NSArray *validValues = @[UAEnableUserNotificationsActionValue];
 
     for (id value in validValues) {
         arguments.value = value;
@@ -147,100 +142,6 @@
     // Wait for the test expectations
     [self waitForTestExpectations];
     [self.mockPush verify];
-}
-
-- (void)testEnableLocation {
-    __block BOOL actionPerformed = NO;
-
-    [[[self.mockLocation stub] andReturnValue:@(NO)] isLocationDeniedOrRestricted];
-
-    UAActionArguments *arguments = [[UAActionArguments alloc] init];
-    arguments.value = UAEnableLocationActionValue;
-
-    [[self.mockLocation expect] setLocationUpdatesEnabled:YES];
-    [[self.mockApplication reject] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]
-                                   options:OCMOCK_ANY
-                         completionHandler:OCMOCK_ANY];
-
-    [self.action performWithArguments:arguments completionHandler:^(UAActionResult *result) {
-        actionPerformed = YES;
-    }];
-
-    [self.mockLocation verify];
-    XCTAssertTrue(actionPerformed);
-}
-
-- (void)testEnableLocationOptedOut {
-    __block BOOL actionPerformed = NO;
-
-    [[[self.mockLocation stub] andReturnValue:@(YES)] isLocationDeniedOrRestricted];
-
-    UAActionArguments *arguments = [[UAActionArguments alloc] init];
-    arguments.value = UAEnableLocationActionValue;
-
-    [[self.mockLocation expect] setLocationUpdatesEnabled:YES];
-    [[[self.mockApplication stub] andDo:^(NSInvocation *invocation) {
-        void *arg;
-        [invocation getArgument:&arg atIndex:4];
-        void (^handler)(BOOL) = (__bridge void (^)(BOOL))arg;
-        handler(YES);
-    }] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString] options:OCMOCK_ANY completionHandler:OCMOCK_ANY];
-
-
-    [self.action performWithArguments:arguments completionHandler:^(UAActionResult *result) {
-        actionPerformed = YES;
-    }];
-
-    [self.mockLocation verify];
-    XCTAssertTrue(actionPerformed);
-}
-
-- (void)testEnableBackgroundLocation {
-    __block BOOL actionPerformed = NO;
-
-    [[[self.mockLocation stub] andReturnValue:@(NO)] isLocationDeniedOrRestricted];
-
-    UAActionArguments *arguments = [[UAActionArguments alloc] init];
-    arguments.value = UAEnableBackgroundLocationActionValue;
-
-    [[self.mockLocation expect] setLocationUpdatesEnabled:YES];
-    [[self.mockLocation expect] setBackgroundLocationUpdatesAllowed:YES];
-    [[self.mockApplication reject] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]
-                                   options:OCMOCK_ANY
-                         completionHandler:OCMOCK_ANY];
-
-    [self.action performWithArguments:arguments completionHandler:^(UAActionResult *result) {
-        actionPerformed = YES;
-    }];
-
-    [self.mockLocation verify];
-    XCTAssertTrue(actionPerformed);
-}
-
-- (void)testEnableBackgroundLocationOptedOut {
-    __block BOOL actionPerformed = NO;
-
-    [[[self.mockLocation stub] andReturnValue:@(NO)] isLocationDeniedOrRestricted];
-
-    UAActionArguments *arguments = [[UAActionArguments alloc] init];
-    arguments.value = UAEnableBackgroundLocationActionValue;
-
-    [[self.mockLocation expect] setLocationUpdatesEnabled:YES];
-    [[self.mockLocation expect] setBackgroundLocationUpdatesAllowed:YES];
-    [[[self.mockApplication stub] andDo:^(NSInvocation *invocation) {
-        void *arg;
-        [invocation getArgument:&arg atIndex:4];
-        void (^handler)(BOOL) = (__bridge void (^)(BOOL))arg;
-        handler(YES);
-    }] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString] options:OCMOCK_ANY completionHandler:OCMOCK_ANY];
-
-
-    [self.action performWithArguments:arguments completionHandler:^(UAActionResult *result) {
-        actionPerformed = YES;
-    }];
-
-    [self.mockLocation verify];
-    XCTAssertTrue(actionPerformed);
 }
 
 @end

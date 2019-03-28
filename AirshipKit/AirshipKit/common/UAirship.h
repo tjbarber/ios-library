@@ -8,7 +8,6 @@
 // Frameworks
 #import <SystemConfiguration/SystemConfiguration.h>
 #import <CoreData/CoreData.h>
-#import <CoreLocation/CoreLocation.h>
 #import <Security/Security.h>
 #import <QuartzCore/QuartzCore.h>
 #import <Availability.h>
@@ -34,7 +33,6 @@
 @class UAInAppMessageManager;
 @class UALegacyInAppMessaging;
 @class UAMessageCenter;
-@class UALocation;
 @class UAAutomation;
 @class UAChannelCapture;
 @class UARemoteDataManager;
@@ -253,11 +251,6 @@ extern NSString * const UAirshipTakeOffBackgroundThreadException;
  * cannot be located at runtime.
  */
 + (nullable NSBundle *) resources;
-
-/**
- * Returns the `UALocation` instance.
- */
-+ (null_unspecified UALocation *)location;
 
 /**
  * Returns the `UAAutomation` instance.

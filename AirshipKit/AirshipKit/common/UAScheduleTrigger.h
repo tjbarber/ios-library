@@ -201,26 +201,6 @@ extern NSString *const UAScheduleTriggerVersionName;
 + (instancetype)activeSessionTriggerWithCount:(NSUInteger)count;
 
 /**
- * Factory method to create a region enter trigger.
- *
- * @param regionID Source ID of the region.
- * @param count Number of region enters before firing the trigger.
- * @return A region enter trigger.
- */
-+ (instancetype)regionEnterTriggerForRegionID:(NSString *)regionID
-                                        count:(NSUInteger)count;
-
-/**
- * Factory method to create a region exit trigger.
- *
- * @param regionID Source ID of the region.
- * @param count Number of region exits before firing the trigger.
- * @return A region exit trigger.
- */
-+ (instancetype)regionExitTriggerForRegionID:(NSString *)regionID
-                                       count:(NSUInteger)count;
-
-/**
  * Factory method to create a screen trigger.
  *
  * @param screenName Name of the screen.

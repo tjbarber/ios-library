@@ -11,25 +11,12 @@
 extern NSString *const UAEnableUserNotificationsActionValue;
 
 /**
- * Argument value to enable user location.
- */
-extern NSString *const UAEnableLocationActionValue;
-
-/**
- * Argument value to enable background location.
- */
-extern NSString *const UAEnableBackgroundLocationActionValue;
-
-
-/**
  * Enables an Urban Airship feature.
  *
  * This action is registered under the names enable_feature and ^ef.
  *
  * Expected argument values: 
  * - "user_notifications": To enable user notifications.
- * - "location": To enable location updates.
- * - "background_location": To enable location and allow background updates.
  *
  *
  * Valid situations: UASituationForegroundPush, UASituationLaunchedFromPush,
